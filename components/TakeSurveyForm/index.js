@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import useJsonBin from '../../hooks/useJsonBin';
 import ModalContainer from "../ModalContainer"
 import DetailForm from './DetailForm';
 import ProjectRequirement from './ProjectRequirement';
@@ -6,16 +7,20 @@ import RatingSection from './RatingSection';
 
 const TakeSurveyForm = ({ show, closeFunction }) => {
     const [page, setPage] = useState(0);
-
-    const PageDisplay = () => {
-        if (page === 0) {
-            return <DetailForm />
-        } else if (page === 1) {
-            return <RatingSection />
-        } else {
-            return <ProjectRequirement />
+    const [surveyData, setSurveyData] = useState(null);
+    const [questionList, setQuestionList] = useState([]);
+    const {fetchJSON} = useJsonBin();
+    useEffect(()=>{
+        if(show){
+            setSurveyData(show)
+            collectQuestionList(show?.formUri);
         }
+    },[show])
+    const collectQuestionList = async (id) => {
+        const res = await fetchJSON(id);
+        setQuestionList(res?.record)
     }
+
     return (
         <ModalContainer
             show={show}
@@ -51,7 +56,7 @@ const TakeSurveyForm = ({ show, closeFunction }) => {
                             1/5
                         </div> */}
                         <div className="content-body">
-                            {PageDisplay()}
+                         <ProjectRequirement page={page} totalPages={questionList?.length}/>
                         </div>
                         <div className="button-wrapper">
                             <button className="button"

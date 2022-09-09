@@ -19,7 +19,7 @@ function useJsonBin() {
 
     }
     const fetchJSON = async (id) => {
-        const res = await fetch(API_URL+"/631b3b66e13e6063dca17f95", {
+        const res = await fetch(API_URL+`/${id}`, {
             method: 'GET',
             headers: {
                 "X-Master-key": MASTER_KEY
@@ -27,7 +27,7 @@ function useJsonBin() {
         });
         const response = await res.json();
         console.log({response})
-        return response.metadata.record
+        return response?.record
 
     }
     

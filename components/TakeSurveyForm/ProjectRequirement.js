@@ -1,10 +1,13 @@
 import React from 'react'
 import Checkbox from '../Checkbox'
-const ProjectRequirement = () => {
+const ProjectRequirement = ({
+  page,
+  totalPages
+}) => {
   return (
     <div className="ProjectRequirement-container">
       <div className="count-number">
-        3/5
+      {page}/{totalPages}
       </div>
       <div className="title">What your poject need?</div>
       <div className="checkbox-wrapper">

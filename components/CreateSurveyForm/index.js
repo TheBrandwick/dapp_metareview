@@ -6,10 +6,8 @@ import ModalContainer from '../ModalContainer';
 function CreateSurveyForm({ show, create_survey, closeFunction }) {
     const [entryFee, setEntryFee] = useState("");
     const [step, setStep] = useState(1);
-    const { uploadJSON, fetchJSON } = useJsonBin()
-    useEffect(()=>{
-        fetchJSON()
-    },[])
+    const { uploadJSON } = useJsonBin()
+
     const [generalFields, setGeneralFields] = useState({
         maxParticipantsCount: "",
         rewardPerParticipant: "",
