@@ -204,7 +204,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
                         />
                         {question.options.map((option, o_index) => {
                             return <input
-                            type={option.type}
+                            type="text"
                             value={option.content}
                             onChange={(e)=>updateOption(index, o_index, {
                                 question: e.target.value
