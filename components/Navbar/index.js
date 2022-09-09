@@ -5,7 +5,7 @@ function Navbar({ connected }) {
     return (
         <div className='nav'>
             <div className='logo'>
-                <img src="/BetSolLogo.png" alt="SolSurvey"/>
+                <img src="/logo.png" alt="SolSurvey"/>
             </div>
             <div className='wallet-info'>
                 <WalletMultiButton />

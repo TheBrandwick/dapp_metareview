@@ -6,8 +6,10 @@ import ModalContainer from '../ModalContainer';
 function CreateSurveyForm({ show, create_survey, closeFunction }) {
     const [entryFee, setEntryFee] = useState("");
     const [step, setStep] = useState(1);
-    const { uploadJSON } = useJsonBin()
-
+    const { uploadJSON, fetchJSON } = useJsonBin()
+    useEffect(() => {
+        fetchJSON()
+    }, [])
     const [generalFields, setGeneralFields] = useState({
         maxParticipantsCount: "",
         rewardPerParticipant: "",
@@ -48,7 +50,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
     }
     const addQuestion = (e) => {
         e.preventDefault()
-        setStep(step+1)
+        setStep(step + 1)
         setQuestionList((prev) => ([
             ...prev,
             {
@@ -99,9 +101,9 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
     const handleSubmit = async () => {
         console.log(generalFields);
         console.log(questionList);
-        
+
         const res = await uploadJSON(questionList)
-        console.log("Uploaded file id=>",res)
+        console.log("Uploaded file id=>", res)
         let data_to_send = {
             ...generalFields,
             "formUri": res
@@ -190,31 +192,39 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
                     </button>
                 </form>}
                 {questionList && questionList.map((question, index) => {
-                    return <form onSubmit={addQuestion} key={index} className={`${step === index + 2?'active-form-slide':'inactive-form-slide'}`}>
-                        <input
-                            type="text"
-                            value={question.question}
-                            onChange={(e)=>updateQuestion(index, {
-                                question: e.target.value
-                            })}
-                            placeholder="Enter the Question"
-                            required
-                        />
-                        {question.options.map((option, o_index) => {
-                            return <input
-                            type="text"
-                            value={option.content}
-                            onChange={(e)=>updateOption(index, o_index, {
-                                question: e.target.value
-                            })}
-                            placeholder={`Enter the Option ${o_index+1}`}
-                            required
-                        />
-                        })}
-                        <button type='button' onClick={()=>addOption(index)}>+ Add Another</button>
-                        <div className='bottom-action-btn'>
-                            <button type="button" onClick={handleSubmit}>Submit</button>
-                            <button type="submit">Next</button>
+                    return <form onSubmit={addQuestion} key={index} className={`${step === index + 2 ? 'active-form-slide' : 'inactive-form-slide'}`}>
+
+                        <div className='form-content'>
+                            <div className='form-input'>
+                                <input
+                                    type="text"
+                                    value={question.question}
+                                    onChange={(e) => updateQuestion(index, {
+                                        question: e.target.value
+                                    })}
+                                    placeholder="Enter the Question"
+                                    required
+                                    className='input-box-question'
+                                />
+                                {question.options.map((option, o_index) => {
+                                    return <input
+                                        type="text"
+                                        value={option.content}
+                                        onChange={(e) => updateOption(index, o_index, {
+                                            question: e.target.value
+                                        })}
+                                        placeholder={`Enter the Option ${o_index + 1}`}
+                                        required
+                                        className='input-box-option'
+                                    />
+                                })}
+                            </div>
+                            <button className='add-another' type='button' onClick={() => addOption(index)}>+ Add Another</button>
+
+                            <div className='bottom-action-btn'>
+                                <button type="button" onClick={handleSubmit}>Submit</button>
+                                <button type="submit">Next</button>
+                            </div>
                         </div>
                     </form>
                 })}
