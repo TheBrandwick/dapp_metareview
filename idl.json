@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "lottery_program",
+  "name": "sol_survey",
   "instructions": [
     {
       "name": "initialize",
@@ -24,7 +24,7 @@
       "args": []
     },
     {
-      "name": "createLottery",
+      "name": "createSurvey",
       "accounts": [
         {
           "name": "programState",
@@ -32,7 +32,91 @@
           "isSigner": false
         },
         {
-          "name": "lottery",
+          "name": "survey",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "creator",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        },
+        {
+          "name": "maxParticipantsCount",
+          "type": "u64"
+        },
+        {
+          "name": "rewardPerParticipant",
+          "type": "u64"
+        },
+        {
+          "name": "validUntil",
+          "type": "u64"
+        },
+        {
+          "name": "isDraft",
+          "type": "bool"
+        },
+        {
+          "name": "isActive",
+          "type": "bool"
+        },
+        {
+          "name": "formUri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "editSurvey",
+      "accounts": [
+        {
+          "name": "survey",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "isDraft",
+          "type": "bool"
+        },
+        {
+          "name": "isActive",
+          "type": "bool"
+        },
+        {
+          "name": "formUri",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "participateSurvey",
+      "accounts": [
+        {
+          "name": "participation",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "survey",
           "isMut": true,
           "isSigner": false
         },
@@ -49,21 +133,21 @@
       ],
       "args": [
         {
-          "name": "entryFee",
+          "name": "userId",
           "type": "u64"
         }
       ]
     },
     {
-      "name": "createParticipant",
+      "name": "submitSurveyAsParticipant",
       "accounts": [
         {
-          "name": "lottery",
+          "name": "participation",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "participant",
+          "name": "survey",
           "isMut": true,
           "isSigner": false
         },
@@ -71,17 +155,38 @@
           "name": "user",
           "isMut": true,
           "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "userId",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claimSurveyReward",
+      "accounts": [
+        {
+          "name": "participation",
+          "isMut": true,
+          "isSigner": false
         },
         {
-          "name": "systemProgram",
-          "isMut": false,
+          "name": "survey",
+          "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
         }
       ],
       "args": []
     },
     {
-      "name": "finalizeWinner",
+      "name": "signUpUser",
       "accounts": [
         {
           "name": "programState",
@@ -89,33 +194,12 @@
           "isSigner": false
         },
         {
-          "name": "lottery",
+          "name": "userAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "user",
-          "isMut": true,
-          "isSigner": true
-        }
-      ],
-      "args": [
-        {
-          "name": "offchainRandomIndex",
-          "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "claimReward",
-      "accounts": [
-        {
-          "name": "lottery",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "participant",
+          "name": "fundLocker",
           "isMut": true,
           "isSigner": false
         },
@@ -130,6 +214,32 @@
           "isSigner": false
         }
       ],
+      "args": [
+        {
+          "name": "bump",
+          "type": "u8"
+        },
+        {
+          "name": "firstName",
+          "type": "string"
+        },
+        {
+          "name": "lastName",
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        },
+        {
+          "name": "profilePic",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "upgradeTier",
+      "accounts": [],
       "args": []
     }
   ],
@@ -144,93 +254,170 @@
             "type": "publicKey"
           },
           {
-            "name": "lotteryCount",
+            "name": "surveyCount",
+            "type": "u64"
+          },
+          {
+            "name": "userCount",
             "type": "u64"
           }
         ]
       }
     },
     {
-      "name": "Lottery",
+      "name": "Survey",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "index",
+            "name": "id",
             "type": "u64"
           },
           {
-            "name": "funds",
-            "type": "u64"
-          },
-          {
-            "name": "entryFee",
-            "type": "u64"
-          },
-          {
-            "name": "winner",
+            "name": "creator",
             "type": "publicKey"
           },
           {
-            "name": "participantCount",
+            "name": "maxParticipantsCount",
             "type": "u64"
+          },
+          {
+            "name": "currentParticipantsCount",
+            "type": "u64"
+          },
+          {
+            "name": "rewardPerParticipant",
+            "type": "u64"
+          },
+          {
+            "name": "validUntil",
+            "type": "u64"
+          },
+          {
+            "name": "isDraft",
+            "type": "bool"
           },
           {
             "name": "isActive",
             "type": "bool"
           },
           {
-            "name": "rewardClaimed",
+            "name": "formUri",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "User",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "walletAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "firstName",
+            "type": "string"
+          },
+          {
+            "name": "lastName",
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "type": "string"
+          },
+          {
+            "name": "profilePic",
+            "type": "string"
+          },
+          {
+            "name": "surveyCreatedCount",
+            "type": "u64"
+          },
+          {
+            "name": "surveyAttemptedCount",
+            "type": "u64"
+          },
+          {
+            "name": "totalRewardEarned",
+            "type": "u64"
+          },
+          {
+            "name": "totalAmountSpent",
+            "type": "u64"
+          },
+          {
+            "name": "fundsLockerAddress",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Participation",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "participantAddress",
+            "type": "publicKey"
+          },
+          {
+            "name": "userId",
+            "type": "u64"
+          },
+          {
+            "name": "surveyId",
+            "type": "u64"
+          },
+          {
+            "name": "completed",
+            "type": "bool"
+          },
+          {
+            "name": "rewarded",
             "type": "bool"
           }
         ]
       }
     },
     {
-      "name": "Participant",
+      "name": "FundLocker",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "user",
-            "type": "publicKey"
+            "name": "funds",
+            "type": "u64"
           },
           {
-            "name": "index",
+            "name": "lockDate",
+            "type": "u64"
+          },
+          {
+            "name": "releaseDate",
+            "type": "u64"
+          },
+          {
+            "name": "userId",
             "type": "u64"
           }
         ]
       }
     }
   ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "NotAManager",
-      "msg": "Restricted! You are not having Manager privilege."
-    },
-    {
-      "code": 6001,
-      "name": "NotAWinner",
-      "msg": "Claim Failed! You are not winner of this lottery."
-    },
-    {
-      "code": 6002,
-      "name": "RewardAlreadyClaimed",
-      "msg": "Claim Failed! Lottery reward is already claimed."
-    },
-    {
-      "code": 6003,
-      "name": "LotteryIsOver",
-      "msg": "Lottery Inactive. This lottery is over."
-    },
-    {
-      "code": 6004,
-      "name": "InsufficientFundsForTransaction",
-      "msg": "Claim Failed! Insufficiant funds."
-    }
-  ],
   "metadata": {
-    "address": "4HveBYSyVrUyhArU6uycuyLPeSMT2bEjxtkAq5DAt7c5"
+    "address": "9xUCA4apJEJRUVSpyYrXwjC12mTGYRgBJSd38focKqNC"
   }
 }

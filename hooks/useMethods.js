@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import useProgram from './useProgram';
 import * as anchor from '@project-serum/anchor'
 import { utf8 } from '@project-serum/anchor/dist/cjs/utils/bytes';
+import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 
 // Random int generation function
 function getRandomInt(max) {
@@ -10,12 +11,12 @@ function getRandomInt(max) {
 
 function useMethods() {
   const { program, wallet } = useProgram();
-  const [all_lotteries, set_all_lotteries] = useState([])
+  const [all_surveys, set_all_surveys] = useState([])
 
-  const getAllLotteries = async () => {
-    const all_lotteries = await program.account.lottery.all();
-    console.log({ all_lotteries })
-    set_all_lotteries(all_lotteries)
+  const getAllSurveys = async () => {
+    const all_surveys = await program.account.survey.all();
+    console.log({ all_surveys })
+    set_all_surveys(all_surveys)
   }
   const initialize = async () => {
     let [account_state_signer] = await anchor.web3.PublicKey.findProgramAddress(
@@ -32,61 +33,143 @@ function useMethods() {
     console.log("Your initialized transaction signature", tx);
   }
 
-  const create_lottery = async (fees = 100000000) => {
-    let [account_state_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode("state")],
+  const create_survey = async (data) => {
+    let [program_state_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('state')],
       program.programId
     )
-    let account_state_data = await program.account.programState.fetch(account_state_pda);
-    console.log({ account_state_data })
-    let [lottery_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode("lottery"), new anchor.BN(account_state_data.lotteryCount).toArrayLike(Buffer, 'be', 8)],
-      program.programId
-    )
-    console.log({ lottery_pda })
-    const tx = await program.rpc.createLottery(new anchor.BN(1000000000), {
-      accounts: {
-        programState: account_state_pda,
-        lottery: lottery_pda,
-        user: wallet.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId
-      }
-    });
-    console.log("Create lotttery tx =", tx)
 
-    getAllLotteries();
+    let program_state_data = await program.account.programState.fetch(program_state_pda);
+    // console.log({program_state_data})
+    let survey_count = program_state_data.surveyCount;
+    let [survey_account_pda, survey_bump] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('survey'), survey_count.toArrayLike(Buffer, 'be', 8)],
+      program.programId
+    )
+    let date_in_number = (new Date(data.validUntil)).getTime();
+    let payload = {
+      bump: survey_bump,
+      maxParticipantsCount: new anchor.BN(parseInt(data.maxParticipantsCount)),
+      rewardPerParticipant: new anchor.BN(parseInt(data.rewardPerParticipant * LAMPORTS_PER_SOL)),
+      validUntil: new anchor.BN(date_in_number),
+      isDraft: data.isDraft,
+      isActive: data.isActive,
+      formUri: data.formUri
+    }
+
+    // Add your test here.
+    const tx = await program.rpc.createSurvey(
+      payload.bump,
+      payload.maxParticipantsCount,
+      payload.rewardPerParticipant,
+      payload.validUntil,
+      payload.isDraft,
+      payload.isActive,
+      payload.formUri,
+      {
+        accounts: {
+          programState: program_state_pda,
+          survey: survey_account_pda,
+          creator: wallet.publicKey,
+          systemProgram: anchor.web3.SystemProgram.programId
+        }
+      });
+    // let survey_data = await program.account.survey.fetch(survey_account_pda);
+    // console.log("Create survey => ", survey_data)
+    console.log("Your transaction signature (Create Survey)", tx);
+
+    getAllSurveys();
   }
-
-  const take_part = async (lottery_index) => {
-    let [lottery_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode("lottery"), new anchor.BN(lottery_index).toArrayLike(Buffer, 'be', 8)],
+  const edit_survey = async (survey_id, data) => {
+    let [survey_account_pda, survey_bump] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('survey'), survey_id.toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
-    let lottery_data = await program.account.lottery.fetch(lottery_pda);
+    let survey_data = await program.account.survey.fetch(survey_account_pda);
+    console.log("Edit survey => ", survey_data)
+    let payload = {
+      isDraft: data.isDraft,
+      isActive: data.isActive,
+      formUri: data.formUri
+    }
 
-    let [participant_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode("participant"), new anchor.BN(lottery_data.index).toArrayLike(Buffer, 'be', 8), lottery_data.participantCount.toArrayLike(Buffer, 'be', 8)],
+    // Add your test here.
+    const tx = await program.methods.editSurvey(
+      payload.isDraft,
+      payload.isActive,
+      payload.formUri
+    )
+      .accounts({
+        survey: survey_account_pda,
+        user: wallet.publicKey,
+      })
+      .rpc();
+    console.log("Your transaction signature (Edit Survey)", tx);
+
+    getAllSurveys();
+  }
+  const enter_into_survey = async (survey_id) => {
+    let [user_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('user'), wallet.publicKey.toBuffer()],
+      program.programId
+    )
+    let user_data = await program.account.user.fetch(user_account_pda);
+    console.log({ user_data })
+    let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
-    console.log(lottery_data.entryFee.toString(), { participant_pda })
-    console.log({
-      lottery: lottery_pda,
-      participant: participant_pda,
-      user: wallet.publicKey,
-      systemProgram: anchor.web3.SystemProgram.programId
-    })
-    const tx = await program.rpc.createParticipant({
+    let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('participation'), new anchor.BN(user_data.id).toArrayLike(Buffer, 'be', 8), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
+      program.programId
+    )
+
+
+    let payload = {
+      user_id: new anchor.BN(user_data.id)
+    }
+
+    // Add your test here.
+    const tx = await program.rpc.participateSurvey(
+      payload.user_id, {
       accounts: {
-        lottery: lottery_pda,
-        participant: participant_pda,
+        participation: participation_pda,
+        survey: survey_account_pda,
         user: wallet.publicKey,
         systemProgram: anchor.web3.SystemProgram.programId
       }
-    })
+    }
+    );
+    console.log("Your transaction signature (Enter Survey)", tx);
+    await getAllSurveys();
+  }
+  const submit_survey = async (user_id, survey_id) => {
+    let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('survey'), survey_id.toArrayLike(Buffer, 'be', 8)],
+      program.programId
+    )
 
-    console.log("tx=", tx)
-    await getAllLotteries();
+    let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('participation'), user_id.toArrayLike(Buffer, 'be', 8), survey_id.toArrayLike(Buffer, 'be', 8)],
+      program.programId
+    )
+
+
+    let payload = {
+      user_id: user_id
+    }
+
+    // Add your test here.
+    const tx = await program.methods.submitSurveyAsParticipant(payload.user_id)
+      .accounts({
+        participation: participation_pda,
+        survey: survey_account_pda,
+        user: wallet.publicKey,
+      })
+      .rpc();
+    console.log("Your transaction signature (Submit Survey)", tx);
+    await getAllSurveys();
   }
 
   const elect_winner = async (lottery_index) => {
@@ -111,7 +194,7 @@ function useMethods() {
       }
     });
     console.log("Finalize winner tx=", tx);
-    getAllLotteries();
+    getAllSurveys();
   }
 
   const getParticipantInfo = async (participant_pda) => {
@@ -137,7 +220,7 @@ function useMethods() {
     });
 
     console.log("Claim Reward tx=", tx)
-    getAllLotteries()
+    getAllSurveys()
   }
 
   const getManager = async () => {
@@ -148,17 +231,72 @@ function useMethods() {
     let account_state_data = await program.account.programState.fetch(account_state_pda);
     return account_state_data.owner
   }
+
+  const signUpUserRequest = async (data) => {
+    let [program_state_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('state')],
+      program.programId
+    )
+    let program_state_data = await program.account.programState.fetch(program_state_pda);
+    console.log({ program_state_data })
+    let user_count = program_state_data.userCount;
+    let [user_account_pda, user_bump] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('user'), wallet.publicKey.toBuffer()],
+      // new anchor.BN(account_state_data.lotteryCount).toArrayLike(Buffer, 'be', 8)
+      program.programId
+    )
+    let [fund_locker_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('locker'), new anchor.BN(user_count).toArrayLike(Buffer, 'be', 8)],
+      program.programId
+    )
+    let payload = {
+      bump: user_bump,
+      first_name: data.f_name,
+      last_name: data.l_name,
+      email: data.email,
+      profile_pic: data.profile_pic
+    }
+    console.log({ payload })
+    console.log("Tony Account Addres", user_account_pda.toString())
+    // Add your test here.
+    const tx = await program.rpc.signUpUser(payload.bump, payload.first_name, payload.last_name, payload.email, payload.profile_pic, {
+      accounts: {
+        programState: program_state_pda,
+        userAccount: user_account_pda,
+        fundLocker: fund_locker_pda,
+        user: wallet.publicKey,
+        systemProgram: anchor.web3.SystemProgram.programId
+      },
+      // signers: [wallet]
+    });
+    console.log("Your signup transaction signature", tx);
+    //   const tx = await program.methods.signUpUser(
+    //     payload.bump, payload.first_name, payload.last_name, payload.email, payload.profile_pic
+    //   )
+    //     .accounts({
+    //       programState: program_state_pda,
+    //       userAccount: user_account_pda,
+    //       fundLocker: fund_locker_pda,
+    //       user: wallet.publicKey,
+    //       systemProgram: anchor.web3.SystemProgram.programId
+    //     })
+    //     .signers([wallet])
+    //     .rpc();
+  }
   return {
-    all_lotteries,
+    all_surveys,
 
     initialize,
-    getAllLotteries,
-    take_part,
-    create_lottery,
+    getAllSurveys,
+    enter_into_survey,
+    submit_survey,
+    create_survey,
+    edit_survey,
     elect_winner,
     getParticipantInfo,
     claimReward,
-    getManager
+    getManager,
+    signUpUserRequest
   }
 }
 
