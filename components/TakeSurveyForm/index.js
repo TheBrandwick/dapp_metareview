@@ -4,7 +4,7 @@ import DetailForm from './DetailForm';
 import ProjectRequirement from './ProjectRequirement';
 import RatingSection from './RatingSection';
 
-const CreateSurveyForm = ({ show, closeFunction }) => {
+const TakeSurveyForm = ({ show, closeFunction }) => {
     const [page, setPage] = useState(0);
 
     const PageDisplay = () => {
@@ -70,4 +70,4 @@ const CreateSurveyForm = ({ show, closeFunction }) => {
     )
 }
 
-export default CreateSurveyForm
+export default TakeSurveyForm

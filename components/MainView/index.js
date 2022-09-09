@@ -38,7 +38,8 @@ function MainView() {
     claimReward,
     getManager,
 
-    signUpUserRequest
+    signUpUserRequest,
+    checkParticipationStatus
   } = useMethods();
 
 
@@ -81,6 +82,7 @@ function MainView() {
               getParticipantInfo={getParticipantInfo}
               claimReward={claimReward}
               userIsManager={userIsManager}
+              checkParticipationStatus={checkParticipationStatus}
             />
           }
         })}
@@ -97,6 +99,7 @@ function MainView() {
               getParticipantInfo={getParticipantInfo}
               claimReward={claimReward}
               userIsManager={userIsManager}
+              checkParticipationStatus={checkParticipationStatus}
             />
           }
         })}

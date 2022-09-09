@@ -283,6 +283,34 @@ function useMethods() {
     //     .signers([wallet])
     //     .rpc();
   }
+
+  const getCurrentUser = async () => {
+    let [current_user_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('user'), wallet.publicKey.toBuffer()],
+      program.programId
+    )
+    let user_data = await program.account.user.fetch(current_user_pda);
+    return user_data
+  }
+
+  const checkParticipationStatus = async (survey_id) => {
+
+    let {id} = await getCurrentUser();
+    console.log(id)
+    let [participant_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('participation'), 
+      new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8),
+      new anchor.BN(id).toArrayLike(Buffer, 'be', 8)
+    ],
+      program.programId
+    )
+    try{
+      let found_participation = await program.account.participation.fetch(participant_pda);
+      return found_participation
+    }catch(e){
+      return false
+    }
+  }
   return {
     all_surveys,
 
@@ -296,7 +324,8 @@ function useMethods() {
     getParticipantInfo,
     claimReward,
     getManager,
-    signUpUserRequest
+    signUpUserRequest,
+    checkParticipationStatus
   }
 }
 
