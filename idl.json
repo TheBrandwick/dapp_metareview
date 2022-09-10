@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "name": "sol_survey",
+  "name": "new_sol_survey",
   "instructions": [
     {
       "name": "initialize",
@@ -63,6 +63,10 @@
         {
           "name": "validUntil",
           "type": "u64"
+        },
+        {
+          "name": "title",
+          "type": "string"
         },
         {
           "name": "isDraft",
@@ -299,6 +303,10 @@
             "type": "u64"
           },
           {
+            "name": "title",
+            "type": "string"
+          },
+          {
             "name": "validUntil",
             "type": "u64"
           },
@@ -438,6 +446,6 @@
     }
   ],
   "metadata": {
-    "address": "9xUCA4apJEJRUVSpyYrXwjC12mTGYRgBJSd38focKqNC"
+    "address": "HZc5YJcYf97qrKuLBgWEc7pqXTyAnqrs1i4gfsZN8zya"
   }
 }
