@@ -1,39 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Checkbox from '../Checkbox'
 const ProjectRequirement = ({
   page,
-  totalPages
+  totalPages,
+  questionList,
+  recordUserSelection
 }) => {
+  const [activeQuestion, setActiveQuestion] = useState(1); // consider index will start from 1
+  const nextQuestion = () => { setActiveQuestion(prev => prev + 1) }
+  const previousQuestion = () => { setActiveQuestion(prev => prev - 1) }
+  const updateSelection = (q_index, o_index) => {
+    recordUserSelection(q_index, o_index)
+  }
   return (
     <div className="ProjectRequirement-container">
-      <div className="count-number">
-      {page}/{totalPages}
-      </div>
-      <div className="title">What your poject need?</div>
-      <div className="checkbox-wrapper">
-        <div className="checkbox">
-          <Checkbox labelText="Custom interface and layout" />
-        </div>
-        <div className="checkbox">
-          <Checkbox labelText="Web site design" />
-        </div>
-        <div className="checkbox">
-          <Checkbox labelText="Seo optimization" />
-        </div>
-        <div className="checkbox">
-          <Checkbox labelText="CMS integrations (Wordpress)" />
-        </div>
-        <div className="checkbox">
-          <Checkbox labelText="Newsletter Campaign" />
+      {questionList?.map((item, index) => {
+        return (<form key={index} className={`${activeQuestion === index + 1 ? 'active' : 'inactive'}`}>
+          <div className="count-number">
+            {index + 1}/{totalPages}
+          </div>
+          <div className="title">{item.question}</div>
+          <div className="checkbox-wrapper">
+            {item?.options.map((option_item, option_index) => {
+              return <Checkbox
+                id={`question-${index}-option-${option_index}`}
+                key={option_index}
+                isChecked={item?.selection}
+                labelText={option_item?.content}
+                onClick={() => updateSelection(index, option_index)}
+                onChange={() => { }}
+              />
+            })}
+          </div>
+          <div className="button-wrapper">
+            {activeQuestion !== 1 && <button className="button"
+              onClick={previousQuestion}
+            >Previous</button>}
+            {activeQuestion !== totalPages && <button className="button"
+              onClick={nextQuestion}
+            >Next</button>}
+            {activeQuestion === totalPages && <button className="button"
+              onClick={nextQuestion}
+            >Submit</button>}
 
-        </div>
-        <div className="checkbox">
-          <Checkbox labelText="Logo Design" />
-        </div>
-
-      </div>
-
-
+          </div>
+        </form>)
+      })}
     </div>
   )
 }

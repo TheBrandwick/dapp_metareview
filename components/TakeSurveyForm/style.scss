@@ -350,7 +350,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-
+    form{
+        &.active{
+            display: block;
+        }
+        &.inactive{
+            display: none;
+        }
+    }
     .count-number {
         font-weight: 400;
         font-size: 18px;

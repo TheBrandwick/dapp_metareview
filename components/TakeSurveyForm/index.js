@@ -12,13 +12,25 @@ const TakeSurveyForm = ({ show, closeFunction }) => {
     const {fetchJSON} = useJsonBin();
     useEffect(()=>{
         if(show){
+            console.log({show})
             setSurveyData(show)
-            collectQuestionList(show?.formUri);
+            collectQuestionList(show.formUri);
         }
     },[show])
+    const recordUserSelection = (question_index, selected_option_index) => {
+        let temp_question_list = [...questionList];
+        temp_question_list[question_index] = {
+            ...temp_question_list[question_index],
+            selection: selected_option_index
+        }
+        setQuestionList(temp_question_list)
+
+    }
     const collectQuestionList = async (id) => {
+        if(!id){ return }
         const res = await fetchJSON(id);
-        setQuestionList(res?.record)
+        console.log("records",res)
+        setQuestionList(prev => [...res])
     }
 
     return (
@@ -33,7 +45,7 @@ const TakeSurveyForm = ({ show, closeFunction }) => {
                 <div className="SurveyForm-wrapper">
                     <div className="form-left-container">
                         <div className="Company-logo">
-                            SOLVAY
+                            MetaReview
                         </div>
                         <div className="body">
                             <img src="/assets/smartworks-coworking-cW4lLTavU80-unsplash 1.png" alt="img" />
@@ -52,22 +64,10 @@ const TakeSurveyForm = ({ show, closeFunction }) => {
 
                     </div>
                     <div className="form-right-container">
-                        {/* <div className="count-number">
-                            1/5
-                        </div> */}
                         <div className="content-body">
-                         <ProjectRequirement page={page} totalPages={questionList?.length}/>
+                         <ProjectRequirement totalPages={questionList?.length} questionList={questionList} recordUserSelection={recordUserSelection}/>
                         </div>
-                        <div className="button-wrapper">
-                            <button className="button"
-                                disabled={page === 2}
-                                onClick={
-                                    () => {
-                                        setPage((currPage) => currPage + 1)
-                                    }
-                                }
-                            >Next</button>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
