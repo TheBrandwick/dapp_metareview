@@ -144,7 +144,7 @@ function useMethods() {
     console.log("Your transaction signature (Enter Survey)", tx);
     await getAllSurveys();
   }
-  const submit_survey = async (user_id, survey_id) => {
+  const submit_review = async (user_id, survey_id, form_submission_uri) => {
     let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('survey'), survey_id.toArrayLike(Buffer, 'be', 8)],
       program.programId
@@ -161,7 +161,7 @@ function useMethods() {
     }
 
     // Add your test here.
-    const tx = await program.methods.submitSurveyAsParticipant(payload.user_id)
+    const tx = await program.methods.submitSurveyAsParticipant(payload.user_id, form_submission_uri)
       .accounts({
         participation: participation_pda,
         survey: survey_account_pda,
@@ -313,11 +313,10 @@ function useMethods() {
   }
   return {
     all_surveys,
-
     initialize,
     getAllSurveys,
     enter_into_survey,
-    submit_survey,
+    submit_review,
     create_survey,
     edit_survey,
     elect_winner,

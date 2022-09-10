@@ -31,6 +31,7 @@ function MainView() {
     all_surveys,
     getAllSurveys,
     enter_into_survey,
+    submit_review,
     create_survey,
     initialize,
     elect_winner,
@@ -82,6 +83,7 @@ function MainView() {
               getParticipantInfo={getParticipantInfo}
               claimReward={claimReward}
               userIsManager={userIsManager}
+              submit_review={submit_review}
               checkParticipationStatus={checkParticipationStatus}
             />
           }
@@ -99,6 +101,7 @@ function MainView() {
               getParticipantInfo={getParticipantInfo}
               claimReward={claimReward}
               userIsManager={userIsManager}
+              submit_review={submit_review}
               checkParticipationStatus={checkParticipationStatus}
             />
           }

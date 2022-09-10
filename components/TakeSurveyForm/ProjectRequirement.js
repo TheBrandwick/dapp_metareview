@@ -25,7 +25,7 @@ const ProjectRequirement = ({
               return <Checkbox
                 id={`question-${index}-option-${option_index}`}
                 key={option_index}
-                isChecked={item?.selection}
+                isChecked={item?.selection === option_index}
                 labelText={option_item?.content}
                 onClick={() => updateSelection(index, option_index)}
                 onChange={() => { }}

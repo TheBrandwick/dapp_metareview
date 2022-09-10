@@ -4,7 +4,7 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import TakeSurveyForm from '../TakeSurveyForm';
 
-function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo, claimReward, userIsManager, checkParticipationStatus }) {
+function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo, claimReward, userIsManager, checkParticipationStatus, submit_review }) {
   const wallet = useWallet();
   const [participationStatus, setParticipationStatus] = useState(null);
   const [openTakeSurveyForm, setOpenTakeSurveyForm] = useState(null);
@@ -38,7 +38,11 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
           <div className='count'>{data.currentParticipantsCount.toString()}</div>
         </div>
       </div>
-      <TakeSurveyForm  show={openTakeSurveyForm} closeFunction={() => setOpenTakeSurveyForm(false)} />
+      <TakeSurveyForm
+        submit_review={submit_review}
+        show={openTakeSurveyForm}
+        closeFunction={() => setOpenTakeSurveyForm(false)}
+      />
     </>
 
   )

@@ -5,7 +5,7 @@ import DetailForm from './DetailForm';
 import ProjectRequirement from './ProjectRequirement';
 import RatingSection from './RatingSection';
 
-const TakeSurveyForm = ({ show, closeFunction }) => {
+const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
     const [page, setPage] = useState(0);
     const [surveyData, setSurveyData] = useState(null);
     const [questionList, setQuestionList] = useState([]);
@@ -23,6 +23,7 @@ const TakeSurveyForm = ({ show, closeFunction }) => {
             ...temp_question_list[question_index],
             selection: selected_option_index
         }
+        console.log({temp_question_list})
         setQuestionList(temp_question_list)
 
     }
