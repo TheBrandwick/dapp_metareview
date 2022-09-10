@@ -7,7 +7,7 @@ import TakeSurveyForm from '../TakeSurveyForm';
 function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo, claimReward, userIsManager, checkParticipationStatus }) {
   const wallet = useWallet();
   const [participationStatus, setParticipationStatus] = useState(null);
-  const [openTakeSurveyForm, setOpenTakeSurveyForm] = useState(false);
+  const [openTakeSurveyForm, setOpenTakeSurveyForm] = useState(null);
   useEffect(() => {
     updateParticipationStatus();
   }, [])
