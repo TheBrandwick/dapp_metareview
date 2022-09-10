@@ -4,13 +4,21 @@ const ProjectRequirement = ({
   page,
   totalPages,
   questionList,
-  recordUserSelection
+  recordUserSelection,
+  submitForm
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeQuestion, setActiveQuestion] = useState(1); // consider index will start from 1
   const nextQuestion = () => { setActiveQuestion(prev => prev + 1) }
   const previousQuestion = () => { setActiveQuestion(prev => prev - 1) }
   const updateSelection = (q_index, o_index) => {
     recordUserSelection(q_index, o_index)
+  }
+  const triggerSubmit = async () => {
+    setIsSubmitting(true)
+    submitForm(()=>{
+      setIsSubmitting(false)
+    })
   }
   return (
     <div className="ProjectRequirement-container">
@@ -25,7 +33,7 @@ const ProjectRequirement = ({
               return <Checkbox
                 id={`question-${index}-option-${option_index}`}
                 key={option_index}
-                isChecked={item?.selection}
+                isChecked={item?.selection === option_index}
                 labelText={option_item?.content}
                 onClick={() => updateSelection(index, option_index)}
                 onChange={() => { }}
@@ -39,8 +47,8 @@ const ProjectRequirement = ({
             {activeQuestion !== totalPages && <button className="button"
               onClick={nextQuestion}
             >Next</button>}
-            {activeQuestion === totalPages && <button className="button"
-              onClick={nextQuestion}
+            {activeQuestion === totalPages && <button className="button" disabled={isSubmitting}
+              onClick={triggerSubmit}
             >Submit</button>}
 
           </div>

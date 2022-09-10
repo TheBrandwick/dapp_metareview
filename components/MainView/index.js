@@ -28,9 +28,13 @@ function MainView() {
   })
 
   const {
+    userData,
+    fetchingUserAccount,
+    checkAccount,
     all_surveys,
     getAllSurveys,
     enter_into_survey,
+    submit_review,
     create_survey,
     initialize,
     elect_winner,
@@ -44,10 +48,13 @@ function MainView() {
 
 
 
-  useEffect(() => {
-    getAllSurveys();
-    checkOwner();
+  useEffect( () => {
+     checkAccount();
+      getAllSurveys();
+      checkOwner();
   }, [])
+
+
   const checkOwner = async () => {
     let user = await getManager();
     if (user.toString() === wallet.publicKey.toString()) {
@@ -67,79 +74,92 @@ function MainView() {
       [name]: value
     }))
   }
+  const renderSignup = () => {
+    return <form onSubmit={handleSignUp}>
+      <input
+        name="f_name"
+        type="text"
+        value={signupForm.f_name}
+        onChange={(e) => updateSignupForm(e)}
+        placeholder="First name"
+      />
+      <input
+        name="l_name"
+        type="text"
+        value={signupForm.l_name}
+        onChange={(e) => updateSignupForm(e)}
+        placeholder="Last name"
+      />
+      <input
+        name="email"
+        type="text"
+        value={signupForm.email}
+        onChange={(e) => updateSignupForm(e)}
+        placeholder="email"
+      />
+      <input
+        name="profile_pic"
+        type="text"
+        value={signupForm.profile_pic}
+        onChange={(e) => updateSignupForm(e)}
+        placeholder="profile_pic"
+      />
+      <button type="submit" className="btn btn-square btn-ghost">Signup</button>
+    </form>
+  }
   return (
-    <div className='main-container'>
-      <button className='create-btn' onClick={() => setOpenCreateLotteryForm(true)}>create survey</button>
-      <div className='heading-lottery-type'>Active:</div>
-      <div className='lottery-grid'>
-        {all_surveys?.map(lottery => {
-          if (lottery.account.isActive) {
-            return <LotteryCard
-              key={lottery.account.index}
-              data={lottery.account}
-              enter_into_survey={enter_into_survey}
-              elect_winner={elect_winner}
-              getParticipantInfo={getParticipantInfo}
-              claimReward={claimReward}
-              userIsManager={userIsManager}
-              checkParticipationStatus={checkParticipationStatus}
-            />
-          }
-        })}
-      </div>
-      <div className='heading-lottery-type'>Completed:</div>
-      <div className='lottery-grid'>
-        {all_surveys?.map(lottery => {
-          if (!lottery.account.isActive) {
-            return <LotteryCard
-              key={lottery.account.index}
-              data={lottery.account}
-              enter_into_survey={enter_into_survey}
-              elect_winner={elect_winner}
-              getParticipantInfo={getParticipantInfo}
-              claimReward={claimReward}
-              userIsManager={userIsManager}
-              checkParticipationStatus={checkParticipationStatus}
-            />
-          }
-        })}
-      </div>
-      <form onSubmit={handleSignUp}>
-          <input
-            name="f_name"
-            type="text"
-            value={signupForm.f_name}
-            onChange={(e) => updateSignupForm(e)}
-            placeholder="First name"
-          />
-          <input
-            name="l_name"
-            type="text"
-            value={signupForm.l_name}
-            onChange={(e) => updateSignupForm(e)}
-            placeholder="Last name"
-          />
-          <input
-            name="email"
-            type="text"
-            value={signupForm.email}
-            onChange={(e) => updateSignupForm(e)}
-            placeholder="email"
-          />
-          <input
-            name="profile_pic"
-            type="text"
-            value={signupForm.profile_pic}
-            onChange={(e) => updateSignupForm(e)}
-            placeholder="profile_pic"
-          />
-          <button type="submit" className="btn btn-square btn-ghost">Signup</button>
-        </form>
+    <>
+      {fetchingUserAccount && <div className=''>Verifying...</div>}
+      {!fetchingUserAccount && <>
+        {userData && <div className='main-container'>
+          <button className='create-btn' onClick={() => setOpenCreateLotteryForm(true)}>create survey</button>
+          <div className='heading-lottery-type'>Active:</div>
+          <div className='lottery-grid'>
+            {all_surveys?.map(lottery => {
+              if (lottery.account.isActive) {
+                return <LotteryCard
+                  key={lottery.account.index}
+                  data={lottery.account}
+                  enter_into_survey={enter_into_survey}
+                  elect_winner={elect_winner}
+                  getParticipantInfo={getParticipantInfo}
+                  claimReward={claimReward}
+                  userIsManager={userIsManager}
+                  submit_review={submit_review}
+                  checkParticipationStatus={checkParticipationStatus}
+                />
+              }
+            })}
+          </div>
+          <div className='heading-lottery-type'>Completed:</div>
+          <div className='lottery-grid'>
+            {all_surveys?.map(lottery => {
+              if (!lottery.account.isActive) {
+                return <LotteryCard
+                  key={lottery.account.index}
+                  data={lottery.account}
+                  enter_into_survey={enter_into_survey}
+                  elect_winner={elect_winner}
+                  getParticipantInfo={getParticipantInfo}
+                  claimReward={claimReward}
+                  userIsManager={userIsManager}
+                  submit_review={submit_review}
+                  checkParticipationStatus={checkParticipationStatus}
+                />
+              }
+            })}
+          </div>
 
-          <CreateSurveyForm create_survey={create_survey} show={openCreateLotteryForm} closeFunction={() => setOpenCreateLotteryForm(false)}/>
 
-    </div>
+          <CreateSurveyForm create_survey={create_survey} show={openCreateLotteryForm} closeFunction={() => setOpenCreateLotteryForm(false)} />
+
+        </div>}
+        {!userData && renderSignup()}
+      </>}
+
+    </>
   )
+
 }
 
 export default MainView
