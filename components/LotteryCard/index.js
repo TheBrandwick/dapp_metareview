@@ -21,21 +21,20 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
     <>
       <div className={`lottery-card ${!data.isActive ? 'inactive' : ''}`}>
       <div className='image-survey'>
-        <div className='reward'>
-          <p>Reward to fill 2 Sol</p>
-        </div>
-          <img src="/survey.jfif" alt="participant" />
+        
+          <img src="/survey2.png" alt="participant" />
         </div>
         <div className='survey-heading'>
           Survey #1
         </div>
+        <div className='survey-rewards'>
+         Reward to fill {parseInt(data.rewardPerParticipant.toString()) / LAMPORTS_PER_SOL} SOL
+        </div>
         <div className='survey-about'>
         Fill the company detail on the basis of your experinec ,Feel free to reach out to himanshu091rawat@gmail.com for any queries
         </div>
-        <div className='survey-participants'>
-        {data.currentParticipantsCount.toString()} Out of 100
-        </div>
-        <div className='pool-size'>{parseInt(data.rewardPerParticipant.toString()) / LAMPORTS_PER_SOL} <span className='currency'>SOL</span></div>
+     
+     
         <div className='act-btns'>
           {!participationStatus && <button className='entry-btn' onClick={() => enter_into_survey(data.id)}>ENROLL NOW</button>}
         </div>

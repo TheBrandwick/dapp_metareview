@@ -1,11 +1,10 @@
-import '../styles/globals.css'
 import '../styles/Main.scss'
 import React from 'react';
 import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
 require('@solana/wallet-adapter-react-ui/styles.css');
 import dynamic from 'next/dynamic'
-
+import '../styles/globals.css'
 export default function MyApp({ Component, pageProps }) {
   const WalletConnectProvider = dynamic(
     () => import('../context/WalletConnectionProvider'),
