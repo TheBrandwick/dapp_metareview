@@ -9,7 +9,7 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
     const [page, setPage] = useState(0);
     const [surveyData, setSurveyData] = useState(null);
     const [questionList, setQuestionList] = useState([]);
-    const {fetchJSON} = useJsonBin();
+    const {fetchJSON, uploadJSON} = useJsonBin();
     useEffect(()=>{
         if(show){
             console.log({show})
@@ -33,7 +33,12 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
         console.log("records",res)
         setQuestionList(prev => [...res])
     }
-
+    const submitForm = async (nextFunction) => {
+        const res = await uploadJSON(questionList)
+        await submit_review(res)
+        nextFunction();
+        closeFunction();
+    }
     return (
         <ModalContainer
             show={show}
@@ -66,7 +71,12 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
                     </div>
                     <div className="form-right-container">
                         <div className="content-body">
-                         <ProjectRequirement totalPages={questionList?.length} questionList={questionList} recordUserSelection={recordUserSelection}/>
+                         <ProjectRequirement 
+                         totalPages={questionList?.length} 
+                         questionList={questionList} 
+                         recordUserSelection={recordUserSelection}
+                         submitForm={submitForm}
+                         />
                         </div>
                         
                     </div>
