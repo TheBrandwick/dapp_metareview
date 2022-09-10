@@ -12,7 +12,25 @@ function getRandomInt(max) {
 function useMethods() {
   const { program, wallet } = useProgram();
   const [all_surveys, set_all_surveys] = useState([])
+  const [userData, setUserData] = useState(null)
+  const [fetchingUserAccount, setFetchingUserAccount] = useState(null)
 
+  const checkAccount = async () => {
+    setFetchingUserAccount(true)
+    let [user_pda] = await anchor.web3.PublicKey.findProgramAddress(
+        [utf8.encode("user"), wallet.publicKey.toBuffer()],
+        program.programId
+    )
+    try {
+        let user_data = await program.account.user.fetch(user_pda);
+        console.log(user_data)
+        setUserData(user_data)
+    } catch {
+        console.log("New user found!")
+    }finally{
+      setFetchingUserAccount(false)
+    }
+}
   const getAllSurveys = async () => {
     const all_surveys = await program.account.survey.all();
     console.log({ all_surveys })
@@ -312,6 +330,9 @@ function useMethods() {
     }
   }
   return {
+    userData,
+    checkAccount,
+    fetchingUserAccount,
     all_surveys,
     initialize,
     getAllSurveys,
