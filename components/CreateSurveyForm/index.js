@@ -16,7 +16,8 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
         validUntil: "",
         isDraft: false,
         isActive: true,
-        formUri: ""
+        formUri: "",
+        title:""
     });
     const [questionList, setQuestionList] = useState([
         {
@@ -125,6 +126,14 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
 
                     <div>
                         <h3>Create New Survey</h3>
+                        <label>Title:</label>
+                        <input
+                            name="title"
+                            type="text"
+                            required
+                            value={generalFields?.title}
+                            onChange={e => updateGeneralFields(e)}
+                        />
 
                         <label>Max. participants:</label>
                         <input
