@@ -12,9 +12,9 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
     updateParticipationStatus();
   }, [data])
   const updateParticipationStatus = async () => {
-    console.log("data.id=",data.id.toString())
+    
     let status = await checkParticipationStatus(data.id);
-    console.log({ status })
+    
     setParticipationStatus(status)
 
   }

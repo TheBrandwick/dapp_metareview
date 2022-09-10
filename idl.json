@@ -159,6 +159,10 @@
       ],
       "args": [
         {
+          "name": "userId",
+          "type": "u64"
+        },
+        {
           "name": "formSubmissionUri",
           "type": "string"
         }

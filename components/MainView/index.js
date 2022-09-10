@@ -49,7 +49,7 @@ function MainView() {
 
 
   useEffect( () => {
-    console.log({all_surveys})
+    
      checkAccount();
       getAllSurveys();
       checkOwner();
@@ -63,7 +63,7 @@ function MainView() {
     }
   }
   const handleSignUp = async (e) => {
-    console.log("handleSignUp")
+    
     e.preventDefault();
     await signUpUserRequest(signupForm)
   };
