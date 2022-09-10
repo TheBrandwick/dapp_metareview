@@ -159,10 +159,6 @@
       ],
       "args": [
         {
-          "name": "userId",
-          "type": "u64"
-        },
-        {
           "name": "formSubmissionUri",
           "type": "string"
         }
@@ -187,7 +183,12 @@
           "isSigner": true
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "userId",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "signUpUser",
@@ -423,6 +424,13 @@
           }
         ]
       }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InsufficientFundsForTransaction",
+      "msg": "Claim Failed! Insufficiant funds."
     }
   ],
   "metadata": {

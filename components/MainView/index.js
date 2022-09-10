@@ -116,11 +116,11 @@ function MainView() {
           <button className='create-btn' onClick={() => setOpenCreateLotteryForm(true)}>create survey</button>
           <div className='heading-lottery-type'>Active:</div>
           <div className='lottery-grid'>
-            {all_surveys?.map(lottery => {
-              if (lottery.account.isActive) {
+            {all_surveys?.map(survey => {
+              if(Number(survey.account.id.toString()) > 6){
                 return <LotteryCard
-                  key={lottery.account.id}
-                  data={lottery.account}
+                  key={survey.account.id}
+                  data={survey.account}
                   enter_into_survey={enter_into_survey}
                   elect_winner={elect_winner}
                   getParticipantInfo={getParticipantInfo}
@@ -130,24 +130,7 @@ function MainView() {
                   checkParticipationStatus={checkParticipationStatus}
                 />
               }
-            })}
-          </div>
-          <div className='heading-lottery-type'>Completed:</div>
-          <div className='lottery-grid'>
-            {all_surveys?.map(lottery => {
-              if (!lottery.account.isActive) {
-                return <LotteryCard
-                  key={lottery.account.id}
-                  data={lottery.account}
-                  enter_into_survey={enter_into_survey}
-                  elect_winner={elect_winner}
-                  getParticipantInfo={getParticipantInfo}
-                  claimReward={claimReward}
-                  userIsManager={userIsManager}
-                  submit_review={submit_review}
-                  checkParticipationStatus={checkParticipationStatus}
-                />
-              }
+
             })}
           </div>
 
