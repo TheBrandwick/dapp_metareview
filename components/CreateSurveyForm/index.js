@@ -115,7 +115,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
         <ModalContainer
             show={show}
             closeFunction={closeFunction}
-            maxHeightAllocated={499}
+            maxHeightAllocated={390}
             maxWidthAllocated={532}
             overflowY="auto"
         >
@@ -186,7 +186,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
 
                     <button
                         type='submit'
-                        className='submit-btn'
+                        className='btn'
                     >
                         Create
                     </button>
@@ -220,12 +220,13 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
                                         className='input-box-option'
                                     />
                                 })}
+                                <div className='add-another-div'>  <button className='btn-outline' type='button' onClick={() => addOption(index)}>+ Add Another</button></div>
                             </div>
-                            <button className='add-another' type='button' onClick={() => addOption(index)}>+ Add Another</button>
+                          
 
                             <div className='bottom-action-btn'>
-                                <button type="button" onClick={handleSubmit}>Submit</button>
-                                <button type="submit">Next</button>
+                                <button className='btn-outline' type="button" onClick={handleSubmit}>Submit</button>
+                                <button className='btn' type="submit">Next</button>
                             </div>
                         </div>
                     </form>

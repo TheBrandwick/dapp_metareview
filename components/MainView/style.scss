@@ -62,15 +62,21 @@
         row-gap: 16px;
         align-items: baseline;
     }
-    .create-btn{
-        cursor: pointer;
-        padding: 8px 16px;
-        border: none;
-        border-radius: 4px;
-        background-color: #008232;
-        
-        color: #fff;
-        font-weight: bold;
-        text-transform: capitalize;
+    .create-div{
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        .create-btn{
+            cursor: pointer;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #FF9F0E;
+            
+            color: #000;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
     }
-}
+    }
+  
