@@ -61,7 +61,7 @@ function useMethods() {
     // console.log({program_state_data})
     let survey_count = program_state_data.surveyCount;
     let [survey_account_pda, survey_bump] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('survey'), survey_count.toArrayLike(Buffer, 'be', 8)],
+      [utf8.encode('survey'), new anchor.BN(survey_count).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
     let date_in_number = (new Date(data.validUntil)).getTime();
@@ -100,7 +100,7 @@ function useMethods() {
   }
   const edit_survey = async (survey_id, data) => {
     let [survey_account_pda, survey_bump] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('survey'), survey_id.toArrayLike(Buffer, 'be', 8)],
+      [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
     let survey_data = await program.account.survey.fetch(survey_account_pda);
@@ -127,12 +127,8 @@ function useMethods() {
     getAllSurveys();
   }
   const enter_into_survey = async (survey_id) => {
-    let [user_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('user'), wallet.publicKey.toBuffer()],
-      program.programId
-    )
-    let user_data = await program.account.user.fetch(user_account_pda);
-    // console.log({ user_data })
+    let { id } = await getCurrentUser();
+    console.log("Pre enter_into_survey", "user_id=", id.toString(), "survey_id=", survey_id.toString())
     let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
@@ -141,7 +137,7 @@ function useMethods() {
     let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [
         utf8.encode('participation'),
-        new anchor.BN(user_data.id).toArrayLike(Buffer, 'be', 8),
+        new anchor.BN(id).toArrayLike(Buffer, 'be', 8),
         new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)
       ],
       program.programId
@@ -149,12 +145,12 @@ function useMethods() {
 
 
     let payload = {
-      user_id: new anchor.BN(user_data.id)
+      user_id: new anchor.BN(id)
     }
 
     // Add your test here.
     const tx = await program.rpc.participateSurvey(
-      payload.user_id, {
+      id, {
       accounts: {
         participation: participation_pda,
         survey: survey_account_pda,
@@ -167,20 +163,20 @@ function useMethods() {
     await getAllSurveys();
   }
   const submit_review = async (survey_id, form_submission_uri) => {
-    let { user_id } = await getCurrentUser();
+    let { id } = await getCurrentUser();
     let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
     let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('participation'), new anchor.BN(user_id).toArrayLike(Buffer, 'be', 8), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
+      [utf8.encode('participation'), new anchor.BN(id).toArrayLike(Buffer, 'be', 8), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
 
     let payload = {
-      user_id: new anchor.BN(user_id)
+      user_id: id
     }
 
     // Add your test here.
@@ -225,21 +221,31 @@ function useMethods() {
     return participant_data
   }
 
-  const claimReward = async (lottery_index) => {
-    let [lottery_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode("lottery"), new anchor.BN(lottery_index).toArrayLike(Buffer, 'be', 8)],
+  const claimReward = async (survey_id) => {
+    let { id } = await getCurrentUser();
+    
+    let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
-    );
+    )
 
-    let lottery_data = await program.account.lottery.fetch(lottery_pda);
-    let lottery_winning_participant = lottery_data.winner;
-    let tx = await program.rpc.claimReward({
-      accounts: {
-        lottery: lottery_pda,
-        participant: lottery_winning_participant,
+    let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
+      [
+        utf8.encode('participation'),
+        new anchor.BN(id).toArrayLike(Buffer, 'be', 8),
+        new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)
+      ],
+      program.programId
+    )
+
+
+    // Add your test here.
+    const tx = await program.rpc.claimSurveyReward(id, {
+      accounts:{
+        participation: participation_pda,
+        survey: survey_account_pda,
         user: wallet.publicKey,
-        systemProgram: anchor.web3.SystemProgram.programId
-      }
+      },
     });
 
     console.log("Claim Reward tx=", tx)
@@ -319,16 +325,15 @@ function useMethods() {
   const checkParticipationStatus = async (survey_id) => {
 
     let { id } = await getCurrentUser();
-    // console.log(id)
+    console.log("user_id=",id.toString())
     let [participant_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('participation'),
-      survey_id.toArrayLike(Buffer, 'be', 8),
-      id.toArrayLike(Buffer, 'be', 8)
+      new anchor.BN(id).toArrayLike(Buffer, 'be', 8),
+      new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)
       ],
       program.programId
     )
     try {
-      let p = await program.account.participation.all();
 
       let found_participation = await program.account.participation.fetch(participant_pda);
       return found_participation

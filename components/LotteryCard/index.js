@@ -10,10 +10,11 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
   const [openTakeSurveyForm, setOpenTakeSurveyForm] = useState(null);
   useEffect(() => {
     updateParticipationStatus();
-  }, [])
+  }, [data])
   const updateParticipationStatus = async () => {
+    console.log("data.id=",data.id.toString())
     let status = await checkParticipationStatus(data.id);
-    console.log({status})
+    console.log({ status })
     setParticipationStatus(status)
 
   }
@@ -21,21 +22,21 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
   return (
     <>
       <div className={`lottery-card ${!data.isActive ? 'inactive' : ''}`}>
-      <div className='image-survey'>
-        
+        <div className='image-survey'>
+
           <img src="/survey2.png" alt="participant" />
         </div>
         <div className='survey-heading'>
           Survey #1
         </div>
         <div className='survey-rewards'>
-         Reward to fill {parseInt(data.rewardPerParticipant.toString()) / LAMPORTS_PER_SOL} SOL
+          Reward to fill {parseInt(data.rewardPerParticipant.toString()) / LAMPORTS_PER_SOL} SOL
         </div>
         <div className='survey-about'>
-        Fill the company detail on the basis of your experinec ,Feel free to reach out to himanshu091rawat@gmail.com for any queries
+          Fill the company detail on the basis of your experinec ,Feel free to reach out to himanshu091rawat@gmail.com for any queries
         </div>
-     
-     
+
+
         <div className='act-btns'>
           {!participationStatus && <button className='entry-btn' onClick={() => enter_into_survey(data.id)}>ENROLL NOW</button>}
         </div>
@@ -45,12 +46,12 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
           {/* <div className='cost'>
             <div className='title'>Entry Fee</div>
             <div className='fee'>0<span className='currency'>SOL</span></div>
-          </div> */}               
+          </div> */}
         </div>
-      
+
 
         {participationStatus && !participationStatus?.completed && <div className='entry-btn' onClick={() => setOpenTakeSurveyForm(data)}>Continue</div>}
-        {participationStatus?.completed && !participationStatus?.rewarded && <div className='claim-btn'>Claim Reward</div>}
+        {participationStatus?.completed && !participationStatus?.rewarded && <div className='claim-btn' onClick={()=>claimReward(data.id)}>Claim Reward</div>}
         {participationStatus?.completed && participationStatus?.rewarded && <div className='claim-btn disabled' onClick={() => { }}>Reward Claimed</div>}
         {/* <div className='participants'>
           <img src="https://toppng.com/uploads/preview/people-people-icon-blue-11553450975ccznm1rxwu.png" alt="participant" />
