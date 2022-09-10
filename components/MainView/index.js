@@ -76,13 +76,17 @@ function MainView() {
     }))
   }
   const renderSignup = () => {
-    return <form onSubmit={handleSignUp}>
+    return <div className='signup-form'>
+      <div className='signup-content'>
+    <form onSubmit={handleSignUp}>
+      <div className='sign-up-heading'>Sign-up</div>
       <input
         name="f_name"
         type="text"
         value={signupForm.f_name}
         onChange={(e) => updateSignupForm(e)}
         placeholder="First name"
+        className='input-form'
       />
       <input
         name="l_name"
@@ -90,23 +94,28 @@ function MainView() {
         value={signupForm.l_name}
         onChange={(e) => updateSignupForm(e)}
         placeholder="Last name"
+        className='input-form'
       />
       <input
         name="email"
         type="text"
         value={signupForm.email}
         onChange={(e) => updateSignupForm(e)}
-        placeholder="email"
+        placeholder="Email"
+        className='input-form'
       />
-      <input
+      {/* <input
         name="profile_pic"
         type="text"
         value={signupForm.profile_pic}
         onChange={(e) => updateSignupForm(e)}
         placeholder="profile_pic"
-      />
-      <button type="submit" className="btn btn-square btn-ghost">Signup</button>
+        className='input-form'
+      /> */}
+      <div className='btn-div'><button type="submit" className="btn btn-square btn-ghost">Sign up</button></div>
     </form>
+    </div>
+    </div>
   }
   return (
     <>
