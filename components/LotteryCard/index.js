@@ -25,9 +25,7 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
           {!participationStatus && <button className='entry-btn' onClick={() => enter_into_survey(data.id)}>ENROLL NOW</button>}
         </div>
         <div className='entry-fee'>
-        <div className='image-survey'>
-        <img src="/survey.jfif" alt="participant" />
-        </div>
+   
        
           {/* <div className='cost'>
             <div className='title'>Entry Fee</div>
