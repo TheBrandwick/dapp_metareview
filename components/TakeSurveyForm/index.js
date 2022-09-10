@@ -12,7 +12,7 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
     const {fetchJSON, uploadJSON} = useJsonBin();
     useEffect(()=>{
         if(show){
-            console.log({show})
+            // console.log({show})
             setSurveyData(show)
             collectQuestionList(show.formUri);
         }
@@ -23,19 +23,20 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
             ...temp_question_list[question_index],
             selection: selected_option_index
         }
-        console.log({temp_question_list})
+        // console.log({temp_question_list})
         setQuestionList(temp_question_list)
 
     }
     const collectQuestionList = async (id) => {
         if(!id){ return }
         const res = await fetchJSON(id);
-        console.log("records",res)
+        // console.log("records",res)
         setQuestionList(prev => [...res])
     }
     const submitForm = async (nextFunction) => {
+        const survey_id = surveyData.id;
         const res = await uploadJSON(questionList)
-        await submit_review(res)
+        await submit_review(survey_id, res)
         nextFunction();
         closeFunction();
     }

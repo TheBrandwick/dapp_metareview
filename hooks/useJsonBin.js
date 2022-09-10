@@ -14,7 +14,7 @@ function useJsonBin() {
             }
         });
         const response = await res.json();
-        console.log({response})
+        // console.log({response})
         return response.metadata.id
 
     }
@@ -26,7 +26,7 @@ function useJsonBin() {
             }
         });
         const response = await res.json();
-        console.log({response})
+        // console.log({response})
         return response?.record
 
     }

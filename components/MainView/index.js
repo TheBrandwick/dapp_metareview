@@ -49,6 +49,7 @@ function MainView() {
 
 
   useEffect( () => {
+    console.log({all_surveys})
      checkAccount();
       getAllSurveys();
       checkOwner();
@@ -118,7 +119,7 @@ function MainView() {
             {all_surveys?.map(lottery => {
               if (lottery.account.isActive) {
                 return <LotteryCard
-                  key={lottery.account.index}
+                  key={lottery.account.id}
                   data={lottery.account}
                   enter_into_survey={enter_into_survey}
                   elect_winner={elect_winner}
@@ -136,7 +137,7 @@ function MainView() {
             {all_surveys?.map(lottery => {
               if (!lottery.account.isActive) {
                 return <LotteryCard
-                  key={lottery.account.index}
+                  key={lottery.account.id}
                   data={lottery.account}
                   enter_into_survey={enter_into_survey}
                   elect_winner={elect_winner}

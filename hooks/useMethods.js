@@ -18,22 +18,22 @@ function useMethods() {
   const checkAccount = async () => {
     setFetchingUserAccount(true)
     let [user_pda] = await anchor.web3.PublicKey.findProgramAddress(
-        [utf8.encode("user"), wallet.publicKey.toBuffer()],
-        program.programId
+      [utf8.encode("user"), wallet.publicKey.toBuffer()],
+      program.programId
     )
     try {
-        let user_data = await program.account.user.fetch(user_pda);
-        console.log(user_data)
-        setUserData(user_data)
+      let user_data = await program.account.user.fetch(user_pda);
+      // console.log(user_data)
+      setUserData(user_data)
     } catch {
-        console.log("New user found!")
-    }finally{
+      console.log("New user found!")
+    } finally {
       setFetchingUserAccount(false)
     }
-}
+  }
   const getAllSurveys = async () => {
     const all_surveys = await program.account.survey.all();
-    console.log({ all_surveys })
+    // console.log({ all_surveys })
     set_all_surveys(all_surveys)
   }
   const initialize = async () => {
@@ -132,14 +132,18 @@ function useMethods() {
       program.programId
     )
     let user_data = await program.account.user.fetch(user_account_pda);
-    console.log({ user_data })
+    // console.log({ user_data })
     let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
       [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
     let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('participation'), new anchor.BN(user_data.id).toArrayLike(Buffer, 'be', 8), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
+      [
+        utf8.encode('participation'),
+        new anchor.BN(user_data.id).toArrayLike(Buffer, 'be', 8),
+        new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)
+      ],
       program.programId
     )
 
@@ -162,30 +166,31 @@ function useMethods() {
     console.log("Your transaction signature (Enter Survey)", tx);
     await getAllSurveys();
   }
-  const submit_review = async (user_id, survey_id, form_submission_uri) => {
+  const submit_review = async (survey_id, form_submission_uri) => {
+    let { user_id } = await getCurrentUser();
     let [survey_account_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('survey'), survey_id.toArrayLike(Buffer, 'be', 8)],
+      [utf8.encode('survey'), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
     let [participation_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('participation'), user_id.toArrayLike(Buffer, 'be', 8), survey_id.toArrayLike(Buffer, 'be', 8)],
+      [utf8.encode('participation'), new anchor.BN(user_id).toArrayLike(Buffer, 'be', 8), new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8)],
       program.programId
     )
 
 
     let payload = {
-      user_id: user_id
+      user_id: new anchor.BN(user_id)
     }
 
     // Add your test here.
-    const tx = await program.methods.submitSurveyAsParticipant(payload.user_id, form_submission_uri)
-      .accounts({
+    const tx = await program.rpc.submitSurveyAsParticipant(payload.user_id, form_submission_uri,{
+      accounts:{
         participation: participation_pda,
         survey: survey_account_pda,
         user: wallet.publicKey,
-      })
-      .rpc();
+      },
+    });
     console.log("Your transaction signature (Submit Survey)", tx);
     await getAllSurveys();
   }
@@ -275,7 +280,7 @@ function useMethods() {
       profile_pic: data.profile_pic
     }
     console.log({ payload })
-    console.log("Tony Account Addres", user_account_pda.toString())
+    // console.log("Tony Account Addres", user_account_pda.toString())
     // Add your test here.
     const tx = await program.rpc.signUpUser(payload.bump, payload.first_name, payload.last_name, payload.email, payload.profile_pic, {
       accounts: {
@@ -313,19 +318,21 @@ function useMethods() {
 
   const checkParticipationStatus = async (survey_id) => {
 
-    let {id} = await getCurrentUser();
-    console.log(id)
+    let { id } = await getCurrentUser();
+    // console.log(id)
     let [participant_pda] = await anchor.web3.PublicKey.findProgramAddress(
-      [utf8.encode('participation'), 
-      new anchor.BN(survey_id).toArrayLike(Buffer, 'be', 8),
-      new anchor.BN(id).toArrayLike(Buffer, 'be', 8)
-    ],
+      [utf8.encode('participation'),
+      survey_id.toArrayLike(Buffer, 'be', 8),
+      id.toArrayLike(Buffer, 'be', 8)
+      ],
       program.programId
     )
-    try{
+    try {
+      let p = await program.account.participation.all();
+
       let found_participation = await program.account.participation.fetch(participant_pda);
       return found_participation
-    }catch(e){
+    } catch (e) {
       return false
     }
   }

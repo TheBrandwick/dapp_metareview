@@ -13,6 +13,7 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
   }, [])
   const updateParticipationStatus = async () => {
     let status = await checkParticipationStatus(data.id);
+    console.log({status})
     setParticipationStatus(status)
 
   }
@@ -48,8 +49,7 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
         </div>
       
 
-        {
-          participationStatus && !participationStatus?.completed && <div className='entry-btn' onClick={() => setOpenTakeSurveyForm(data)}>Continue</div>}
+        {participationStatus && !participationStatus?.completed && <div className='entry-btn' onClick={() => setOpenTakeSurveyForm(data)}>Continue</div>}
         {participationStatus?.completed && !participationStatus?.rewarded && <div className='claim-btn'>Claim Reward</div>}
         {participationStatus?.completed && participationStatus?.rewarded && <div className='claim-btn disabled' onClick={() => { }}>Reward Claimed</div>}
         {/* <div className='participants'>

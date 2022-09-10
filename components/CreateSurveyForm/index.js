@@ -20,14 +20,14 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
     });
     const [questionList, setQuestionList] = useState([
         {
-            question: "what is Solana",
+            question: "",
             options: [
                 {
-                    content: "This is option One",
+                    content: "",
                     type: "checkbox" // checkbox or textarea
                 },
                 {
-                    content: "This is option One",
+                    content: "",
                     type: "checkbox" // checkbox or textarea
                 },
             ]
@@ -54,7 +54,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
         setQuestionList((prev) => ([
             ...prev,
             {
-                question: "This is option One",
+                question: "",
                 type: "text",
                 options: []
             }
@@ -76,7 +76,7 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
     const addOption = (q_index) => {
         let temp_question_list = [...questionList];
         temp_question_list[q_index].options.push({
-            content: "This is option One",
+            content: "",
             type: "checkbox" // checkbox or textarea
         })
         setQuestionList(temp_question_list)
@@ -174,14 +174,14 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
                             onChange={e => updateGeneralFields(e)}
                         />
 
-                        <label>formUri:</label>
+                        {/* <label>formUri:</label>
                         <input
                             name="formUri"
                             type="text"
                             required
                             value={generalFields?.formUri}
                             onChange={e => updateGeneralFields(e)}
-                        />
+                        /> */}
                     </div>
 
                     <button
@@ -212,7 +212,8 @@ function CreateSurveyForm({ show, create_survey, closeFunction }) {
                                         type="text"
                                         value={option.content}
                                         onChange={(e) => updateOption(index, o_index, {
-                                            question: e.target.value
+                                                content: e.target.value,
+                                                type: "checkbox" 
                                         })}
                                         placeholder={`Enter the Option ${o_index + 1}`}
                                         required
