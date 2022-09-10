@@ -25,12 +25,19 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
           {!participationStatus && <button className='entry-btn' onClick={() => enter_into_survey(data.id)}>ENROLL NOW</button>}
         </div>
         <div className='entry-fee'>
-          <div className='cost'>
+        <div className='image-survey'>
+        <img src="/survey.jfif" alt="participant" />
+        </div>
+       
+          {/* <div className='cost'>
             <div className='title'>Entry Fee</div>
             <div className='fee'>0<span className='currency'>SOL</span></div>
-          </div>
+          </div> */}
         </div>
-        {participationStatus && !participationStatus?.completed && <div className='entry-btn' onClick={() => setOpenTakeSurveyForm(data)}>Continue</div>}
+     
+        
+        {
+        participationStatus && !participationStatus?.completed && <div className='entry-btn' onClick={() => setOpenTakeSurveyForm(data)}>Continue</div>}
         {participationStatus?.completed && !participationStatus?.rewarded && <div className='claim-btn'>Claim Reward</div>}
         {participationStatus?.completed && participationStatus?.rewarded && <div className='claim-btn disabled' onClick={() => { }}>Reward Claimed</div>}
         <div className='participants'>
