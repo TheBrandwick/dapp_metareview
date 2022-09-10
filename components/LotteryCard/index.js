@@ -27,7 +27,7 @@ function LotteryCard({ data, enter_into_survey, elect_winner, getParticipantInfo
           <img src="/survey2.png" alt="participant" />
         </div>
         <div className='survey-heading'>
-          Survey #1
+          {data?.title}
         </div>
         <div className='survey-rewards'>
           Reward to fill {parseInt(data.rewardPerParticipant.toString()) / LAMPORTS_PER_SOL} SOL

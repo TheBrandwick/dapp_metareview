@@ -127,11 +127,11 @@ function MainView() {
       {fetchingUserAccount && <div className=''>Verifying...</div>}
       {!fetchingUserAccount && <>
         {userData && <div className='main-container'>
-          <button className='create-btn' onClick={() => setOpenCreateLotteryForm(true)}>create survey</button>
+          <div className='create-div'><button className='create-btn' onClick={() => setOpenCreateLotteryForm(true)}>create survey</button></div>
           <div className='heading-lottery-type'>Active:</div>
           <div className='lottery-grid'>
             {all_surveys?.map(survey => {
-              if(Number(survey.account.id.toString()) > 0){
+              if(Number(survey.account.id.toString()) >= 0){
                 return <LotteryCard
                   key={survey.account.id}
                   data={survey.account}
