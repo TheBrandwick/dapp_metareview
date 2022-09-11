@@ -47,7 +47,7 @@ const ProjectRequirement = ({
             {activeQuestion !== totalPages && <button className="button"
               onClick={nextQuestion}
             >Next</button>}
-            {activeQuestion === totalPages && <button className="button" disabled={isSubmitting}
+            {activeQuestion === totalPages && <button className="button" disabled={isSubmitting} style={{marginLeft: '4px'}}
               onClick={triggerSubmit}
             >Submit</button>}
 

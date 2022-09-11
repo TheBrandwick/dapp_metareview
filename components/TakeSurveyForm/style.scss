@@ -12,7 +12,7 @@
         }
 
         .form-left-container {
-            background: #434BDF;
+            background: #ff9d00;
             height: 650px;
             padding: 20px;
             display: flex;
@@ -55,14 +55,14 @@
                 align-items: center;
 
                 .title {
-                    font-weight: 500;
+                    font-weight: bold;
                     font-size: 31px;
                     line-height: 38px;
                     /* identical to box height, or 124% */
 
                     text-align: center;
 
-                    color: #FFFFFF;
+                    color: #191b1f;
                     margin-top: 20px;
 
                     @media (max-width:768px) {
@@ -85,7 +85,7 @@
 
                     text-align: center;
 
-                    color: #FFFFFF;
+                    color: #191b1f;
                     margin-top: 20px;
                     margin-bottom: 20px;
 
@@ -107,10 +107,10 @@
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 14px;
-                    background: #434BDF;
+                    background: #191b1f;
                     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.2);
                     border-radius: 25px;
-                    color: #FFFFFF;
+                    color: #fff;
                     padding: 15px 45px;
                     cursor: pointer;
                     margin-top: 20px;
@@ -165,7 +165,8 @@
                 }
 
                 .button {
-                    background: #434BDF;
+                    background: #191b1f;
+                    color: #fff;
                     border-radius: 3px;
                     font-weight: 400;
                     font-size: 14px;
@@ -174,7 +175,6 @@
 
                     text-align: center;
 
-                    color: #FFFFFF;
                     padding: 10px 40px;
                     cursor: pointer;
                     border: none;
