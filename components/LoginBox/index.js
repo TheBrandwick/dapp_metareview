@@ -6,7 +6,7 @@ function LoginBox() {
         <div className='login-container'>
             <div className='login-box'>
                 <div className='title'>Login to SolSurvey</div>
-                <div className='sub-title'>Unlock the decentralised betting world!</div>
+                <div className='sub-title'>Earn Rewards and nfts after filling feedback forms!</div>
                 <div className='button-container'>
                     <WalletMultiButton />
                 </div>
