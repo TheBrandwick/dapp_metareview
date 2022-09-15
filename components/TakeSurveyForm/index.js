@@ -52,12 +52,12 @@ const TakeSurveyForm = ({ show, closeFunction, submit_review }) => {
                 <div className="SurveyForm-wrapper">
                     <div className="form-left-container">
                         <div className="Company-logo">
-                            MetaReview
+                            
                         </div>
                         <div className="body">
-                            <img src="/assets/smartworks-coworking-cW4lLTavU80-unsplash 1.png" alt="img" />
-                            <div className="title">Company Day1 Feedback</div>
-                            <div className="desc">Fill the company detail on the basis of your experinec ,Feel free to reach out to himanshu091rawat@gmail.com for any queries</div>
+                            {/* <img src="/assets/smartworks-coworking-cW4lLTavU80-unsplash 1.png" alt="img" /> */}
+                            <div className="title">{show?.title}</div>
+                            <div className="desc">Fill the  detail on the basis of your experinece ,Feel free to reach out to himanshu091rawat@gmail.com for any queries</div>
                             <div className="button">
                                 Re-Start Survey
                             </div>

@@ -70,6 +70,7 @@ function useMethods() {
       maxParticipantsCount: new anchor.BN(parseInt(data.maxParticipantsCount)),
       rewardPerParticipant: new anchor.BN(parseInt(data.rewardPerParticipant * LAMPORTS_PER_SOL)),
       validUntil: new anchor.BN(date_in_number),
+      title: data.title,
       isDraft: data.isDraft,
       isActive: data.isActive,
       formUri: data.formUri
@@ -81,6 +82,7 @@ function useMethods() {
       payload.maxParticipantsCount,
       payload.rewardPerParticipant,
       payload.validUntil,
+      payload.title,
       payload.isDraft,
       payload.isActive,
       payload.formUri,

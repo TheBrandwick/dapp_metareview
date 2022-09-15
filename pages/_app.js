@@ -21,10 +21,10 @@ export default function MyApp({ Component, pageProps }) {
   return (
     <React.Fragment>
       <Head>
-        <title>SolSurvey - OnChain Survey program</title>
-        <meta name="title" content="BetSol - Solana based lottery program" />
-        <meta name="description" content="Take part in range of lotteries on the decentralised infrastructure. Developed by Jaymanyoo Singh Chouhan (@captainIN)" />
-        <meta name="keywords" content="solana, anchor, lottery, dapp" />
+        <title>MetaReview - OnChain Feedback program</title>
+        <meta name="title" content="MetaReview - OnChain Feedback programm" />
+        <meta name="description" content="Take part in range of surveys on the decentralised infrastructure. Developed by team MetaReview." />
+        <meta name="keywords" content="solana, anchor, survey, dapp" />
         <meta name="robots" content="index,follow" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="language" content="English" />

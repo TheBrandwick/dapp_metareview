@@ -65,7 +65,10 @@ function MainView() {
   const handleSignUp = async (e) => {
     
     e.preventDefault();
-    await signUpUserRequest(signupForm)
+    await signUpUserRequest(signupForm);
+    await checkAccount();
+     await getAllSurveys();
+
   };
   const updateSignupForm = (e) => {
     const name = e.target.name;
@@ -119,6 +122,8 @@ function MainView() {
   }
   return (
     <>
+
+{/* <button className='create-btn' onClick={() => initialize()}>init</button> */}
       {fetchingUserAccount && <div className=''>Verifying...</div>}
       {!fetchingUserAccount && <>
         {userData && <div className='main-container'>
@@ -126,7 +131,7 @@ function MainView() {
           <div className='heading-lottery-type'>Active:</div>
           <div className='lottery-grid'>
             {all_surveys?.map(survey => {
-              if(Number(survey.account.id.toString()) > 6){
+              if(Number(survey.account.id.toString()) >= 0){
                 return <LotteryCard
                   key={survey.account.id}
                   data={survey.account}
